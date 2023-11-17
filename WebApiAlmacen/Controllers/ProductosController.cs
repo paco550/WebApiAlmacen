@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using WebApiAlmacen.DTOs;
@@ -9,6 +10,7 @@ namespace WebApiAlmacen.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class ProductosController : ControllerBase
     {
         private readonly MiAlmacenContext _context;
@@ -20,7 +22,7 @@ namespace WebApiAlmacen.Controllers
             _context = context;
             _gestorArchivosLocal = gestorArchivosLocal;
         }
-
+        [AllowAnonymous]
         [HttpGet("productosagrupadospordescatalogado")]
         public async Task<ActionResult<List<DTOProductosAgrupadosDescatalogado>>> GetProductosAgrupadosPorDescatalogado()
         {

@@ -14,15 +14,17 @@ namespace WebApiAlmacen.Controllers
     public class FamiliasController : ControllerBase
     {
         private readonly MiAlmacenContext _context;
+        private readonly ILogger <FamiliasController> _logger;
 
         // Inyección de dependencia en acción. Pasamos al constructor la instancia global de la base de datos
         // al controller. En el constructor, se toma esa instancia global representada por MiAlmacenContext
         // Una vez lo recibe, ese valor se pasa a una propiedad de la clase que es la que vamos a usar en el resto
         // del controller para utilizar la base de datos.
         // Es un estándar llamarle a esa propiedad privada _context
-        public FamiliasController(MiAlmacenContext context)
+        public FamiliasController(MiAlmacenContext context, ILogger logger )
         {
             _context = context;
+            //_logger = logger;
         }
 
         // [HttpGet] precederá a todos los métodos de consulta get. Si, por ejemplo, sería post, pondríamos [HttpPost]
@@ -38,8 +40,9 @@ namespace WebApiAlmacen.Controllers
             // Devolvemos de la tabla familias (representada por el modelo Familias) la lista de todas
             // Recordamos que await hace esperar la resolución del método para continuar. En este caso continúa con el return
 
-            // Gracias a la inyección de dependencia, podemos usar el context que traemos del program
-            var lista = await _context.Familias.ToListAsync();
+           
+           // _logger.LogInformation("Obteniendo familias"); // Ejecutar y ver el resultado en consola o en ventana salida                                                              
+            var lista = await _context.Familias.ToListAsync(); // Gracias a la inyección de dependencia, podemos usar el context que traemos del program
             //return lista;
             throw new Exception("Error deliberado");
         }

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.DataProtection;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -14,6 +15,7 @@ namespace WebApiAlmacen.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class UsuariosController : ControllerBase
     {
         private readonly MiAlmacenContext _context;
@@ -134,6 +136,7 @@ namespace WebApiAlmacen.Controllers
         }
 
         // Endpoint para generar un enlace de cambio de contraseña con hash y salt
+        [AllowAnonymous]
         [HttpPost("hash/linkchangepassword")]
         public async Task<ActionResult> LinkChangePasswordHash([FromBody] DTOUsuarioLinkChangePassword usuario)
         {
@@ -173,58 +176,66 @@ namespace WebApiAlmacen.Controllers
             // Devolver un resultado correcto si el enlace es válido
             return Ok("Enlace correcto");
         }
-
+        // Marca el método como permitido sin autenticación.
+        [AllowAnonymous]
         [HttpPost("login")]
         public async Task<ActionResult> Login([FromBody] DTOUsuario usuario)
         {
+            // Busca el usuario en la base de datos por su dirección de correo electrónico.
             var usuarioDB = await _context.Usuarios.FirstOrDefaultAsync(x => x.Email == usuario.Email);
             if (usuarioDB == null)
             {
+                // Devuelve un resultado BadRequest si el usuario no existe.
                 return BadRequest();
             }
 
+            // Genera el hash del password proporcionado y lo compara con el hash almacenado en la base de datos.
             var resultadoHash = _hashService.Hash(usuario.Password, usuarioDB.Salt);
             if (usuarioDB.Password == resultadoHash.Hash)
             {
-                // Si el login es exitoso devolvemos el token y el email (DTOLoginResponse) 
+                // Si el login es exitoso, genera un token y devuelve la respuesta.
                 var response = GenerarToken(usuario);
                 return Ok(response);
             }
             else
             {
+                // Devuelve un resultado BadRequest si las credenciales no son válidas.
                 return BadRequest();
             }
         }
 
+        // Método privado para generar un token JWT.
         private DTOLoginResponse GenerarToken(DTOUsuario credencialesUsuario)
         {
-            // Los claims construyen la información que va en el payload del token
+            // Los claims son la información que va en el payload del token.
             var claims = new List<Claim>()
-     {
-         new Claim(ClaimTypes.Email, credencialesUsuario.Email),
-         new Claim("lo que yo quiera", "cualquier otro valor")
-     };
+    {
+        new Claim(ClaimTypes.Email, credencialesUsuario.Email),
+        new Claim("lo que yo quiera", "cualquier otro valor")
+    };
 
-            // Necesitamos la clave de generación de tokens
+            // Obtiene la clave secreta para la generación de tokens desde la configuración.
             var clave = _configuration["ClaveJWT"];
-            // Fabricamos el token
+            // Construye la clave para firmar el token.
             var claveKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(clave));
             var signinCredentials = new SigningCredentials(claveKey, SecurityAlgorithms.HmacSha256);
-            // Le damos características
+            // Configura el token con sus características.
             var securityToken = new JwtSecurityToken(
                 claims: claims,
                 expires: DateTime.Now.AddDays(30),
                 signingCredentials: signinCredentials
             );
 
-            // Lo pasamos a string para devolverlo
+            // Convierte el token a cadena para devolverlo en la respuesta.
             var tokenString = new JwtSecurityTokenHandler().WriteToken(securityToken);
 
+            // Devuelve un objeto DTOLoginResponse con el token y el email.
             return new DTOLoginResponse()
             {
                 Token = tokenString,
                 Email = credencialesUsuario.Email
             };
+
         }
     }
 }

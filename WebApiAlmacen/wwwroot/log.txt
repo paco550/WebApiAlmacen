@@ -5,3 +5,9 @@
 ::1 - GET - /api/Familias - 10/11/2023 12:50:25
 ::1 - GET - /api/Familias - 10/11/2023 12:51:29
 Enlace incorrecto
+
+[{"descatalogado":false,"total":3,"productos":[{"id":2,"nombre":"pantalones","precio":4525.00,"fechaAlta":"2022-12-12T00:00:00","descatalogado":false,"fotoUrl":"https://images.app.goo.gl/qJcUYhQKPwAymoUV6","familiaId":2,"familia":null},{"id":4,"nombre":"smawart","precio":800.00,"fechaAlta":"2021-06-05T00:00:00","descatalogado":false,"fotoUrl":"https://images.app.goo.gl/yTRaSTMmPt6cGy416","familiaId":1,"familia":null},{"id":8,"nombre":"mortadela","precio":2.00,"fechaAlta":"2023-07-03T00:00:00","descatalogado":false,"fotoUrl":"https://images.app.goo.gl/GiF8NopRkhae59rk8","familiaId":3,"familia":null}]},{"descatalogado":true,"total":3,"productos":[{"id":1,"nombre":"camiseta","precio":1020.00,"fechaAlta":"2029-08-21T00:00:00","descatalogado":true,"fotoUrl":"https://images.app.goo.gl/jh9DJVdoGTxRAvBc6","familiaId":2,"familia":null},{"id":3,"nombre":"pc","precio":600.00,"fechaAlta":"2022-04-02T00:00:00","descatalogado":true,"fotoUrl":"https://images.app.goo.gl/EGcpGqcTPRB5jDU28","familiaId":1,"familia":null},{"id":5,"nombre":"jamon","precio":120.00,"fechaAlta":"2021-11-06T00:00:00","descatalogado":true,"fotoUrl":"https://images.app.goo.gl/JJSJyidZtb5VTdNUA","familiaId":3,"familia":null}]}]
+
+
+{"type":"https://tools.ietf.org/html/rfc7231#section-6.5.1","title":"Bad Request","status":400,"traceId":"00-5b956cb7fe3e86dfbe873cef33cfb47b-5087eacbc2778ea7-00"}
+{"type":"https://tools.ietf.org/html/rfc7231#section-6.5.1","title":"Bad Request","status":400,"traceId":"00-c9e0f82865e31c4bdffd4e0db1bfc14e-6bf15b75a864e0ab-00"}

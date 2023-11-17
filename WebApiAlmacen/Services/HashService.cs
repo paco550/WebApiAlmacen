@@ -76,6 +76,9 @@ namespace WebApiAlmacen.Services
             var signinCredentials = new SigningCredentials(claveKey, SecurityAlgorithms.HmacSha256);
             // Le damos características
             var securityToken = new JwtSecurityToken(
+               
+               //issuer: credencialesUsuario
+               //audience: 
                 claims: claims,
                 expires: DateTime.Now.AddDays(30),
                 signingCredentials: signinCredentials
